@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blooming into ONE Registry</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif !important;
+    }
+    body { 
+      background-image: url('background-checklist.gif'); 
+      background-size: cover;           
+      background-position: center center; 
+      background-attachment: fixed;     
+      background-repeat: no-repeat;
+      background-color: #ffffff; 
+      min-height: 100vh; 
+      margin: 0; 
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      box-sizing: border-box;
+    }
+    .container { 
+      max-width: 450px; 
+      width: 100%;
+      margin: 100px auto 40px auto; 
+      background: transparent; 
+      padding: 35px 25px; 
+      border-radius: 24px; 
+      text-align: center;
+      box-sizing: border-box;
+    }
+    h2, h3 { 
+      font-weight: 200;
+      color: #c842a4; 
+      margin-top: 0px;
+      letter-spacing: -0.5px;
+    }
+    .flow-label {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 15px;
+      font-weight: 200;
+    }
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      background: #fafafa;
+      transition: all 0.3s;
+    }
+    .input-field:focus { outline: none; border-color: #b08400; background: #fff; }
+    .btn-action {
+      width: 100%;
+      padding: 15px;
+      color: white;
+      background-color: #608fbe;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .btn-action:hover { background-color: #466789; transform: translateY(-1px); }
+    .btn-selection {
+      width: 100%;
+      padding: 16px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #ebd399;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 6px rgba(176,132,0,0.06);
+    }
+    .btn-selection:hover { background: #fffdf6; border-color: #b08400; color: #eacb6c; }
+    .btn-save-checklist { background: #b08400; margin-top: 20px; }
+    .btn-save-checklist:hover { background: #967000; }
+    .btn-text-back {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 20px;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .btn-text-back:hover { color: #333; }
+    .meta-box {
+      background: transparent;
+      padding: 15px 5px;
+      margin-bottom: 25px;
+      font-size: 14px;
+      text-align: left;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .meta-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(176, 132, 0, 0.25);
+    }
+    .meta-item:last-child { border-bottom: none; }
+    .meta-label { font-weight: 700; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-weight: 600; color: #333; text-align: right; }
+    .guest-row {
+      background: transparent;
+      padding: 12px 18px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(176, 132, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .guest-name-lbl { font-weight: 600; color: #333; }
+    .toggle-container { display: flex; width: 100%; background: rgba(241, 242, 246, 0.8); border-radius: 20px; padding: 3px; box-sizing: border-box; }
+    .toggle-opt {
+      flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #747d8c; cursor: pointer; border-radius: 18px; transition: all 0.2s;
+    }
+    .toggle-opt.active-attended { background: #2ecc71; color: white; }
+    .toggle-opt.active-absent { background: #e74c3c; color: white; }
+    .loader { display: none; color: #b08400; font-weight: 700; margin: 20px 0; font-size: 14px; }
+    .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="loader" class="loader">Loading...</div>
+  <div id="dynamicAppContent"></div>
+</div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbx7mVPiPZ1AoNmegMoshOZPWL94W0S6AksuQegnlIrPxJwle300S_MaYeXN6c4CLdHeUA/exec";
+  
+  let activeMainGuestGlobal = "";
+  let cachedGroupRecord = null;
+
+  showHomeScreen();
+
+  function showHomeScreen() {
+    const wrapper = document.getElementById('dynamicAppContent');
+    wrapper.innerHTML = `
+      <h2>GUEST VERIFICATION</h2>
+      <div class="flow-label">Find guest name:</div>
+      <input type="text" id="searchInput" class="input-field" placeholder="Enter guest name..." onkeypress="if(event.key === 'Enter') executeSearchFlow()">
+      <button class="btn-action" onclick="executeSearchFlow()">FIND</button>
+    `;
+  }
+
+  async function executeSearchFlow() {
+    const inputVal = document.getElementById('searchInput').value.trim();
+    if (!inputVal) return;
+    const loader = document.getElementById('loader');
+    const wrapper = document.getElementById('dynamicAppContent');
+    loader.style.display = 'block';
+    wrapper.innerHTML = '';
+
+    try {
+      const response = await fetch(`${API_URL}?action=search&name=${encodeURIComponent(inputVal)}`);
+      const dataMatches = await response.json();
+      loader.style.display = 'none';
+
+      if (dataMatches.length === 0) {
+        wrapper.innerHTML = `
+          <h3 style="color:#e74c3c;">No Records Found</h3>
+          <p style="color:#666; font-size:14px;">We couldn't locate that name in our attendance registries.</p>
+          <button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>
+        `;
+        return;
+      }
+
+      wrapper.innerHTML = `<h3>SELECT GUEST NAME</h3>`;
+      dataMatches.forEach(item => {
+        wrapper.innerHTML += `<button class="btn-selection" onclick="processProfileFetch('${escapeHtml(item.mainGuest)}')">${item.displayName}</button>`;
+      });
+      wrapper.innerHTML += `<br><button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>`;
+    } catch (err) {
+      loader.style.display = 'none';
+      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Network Error connecting to script architecture.</p>`;
+    }
+  }
+
+  async function processProfileFetch(mainGuestName, bypassHistoryScreen = false, showSuccessBanner = false) {
+    activeMainGuestGlobal = mainGuestName;
+    const loader = document.getElementById('loader');
+    const wrapper = document.getElementById('dynamicAppContent');
+    wrapper.innerHTML = '';
+    loader.style.display = 'block';
+
+    try {
+      const response = await fetch(`${API_URL}?action=fetchGroup&mainGuest=${encodeURIComponent(mainGuestName)}`);
+      const profileRows = await response.json();
+      loader.style.display = 'none';
+
+      cachedGroupRecord = profileRows[0];
+      
+      // RSVP REVIEW GATEWAY
+      if (cachedGroupRecord.attendance && cachedGroupRecord.attendance.trim() !== "" && !bypassHistoryScreen) {
+        const statusItems = cachedGroupRecord.attendance.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        let rawCardsString = cachedGroupRecord.cards || "";
+        const cardItems = rawCardsString ? rawCardsString.split(',') : [];
+
+        // STRICT LOGICAL CHECK FOR COMPANIONS
+        let hasCompanions = false;
+        if (cachedGroupRecord.companions && cachedGroupRecord.companions.trim() !== "" && cachedGroupRecord.companions.trim() !== "-") {
+          hasCompanions = true;
+        }
+
+        let statusListHtml = `<div style="text-align: center; margin: 20px auto; max-width: 320px; background: rgba(201,131,34,0.05); padding: 15px 20px; border-radius: 16px; border: 1px dashed rgba(201,131,34,0.25); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;">`;
+        
+        statusItems.forEach((item, index) => {
+          let nameLabel = "";
+          let statusText = "";
+          
+          if (item.includes(':')) {
+            const parts = item.split(':');
+            nameLabel = parts[0].trim();
+            statusText = parts[1].trim();
+          } else {
+            nameLabel = cachedGroupRecord.mainGuest;
+            statusText = item;
+          }
+
+          let cardId = "";
+          const targetMatch = cardItems.find(c => c.trim().startsWith(nameLabel + ":"));
+          if (targetMatch) {
+            cardId = targetMatch.split(':')[1].trim();
+          } else if (cardItems[index]) {
+            const segment = cardItems[index].trim();
+            cardId = segment.includes(':') ? segment.split(':')[1].trim() : segment;
+          }
+
+          let extraCardDetailsHtml = "";
+          if (cardId && cardId !== "-") {
+            extraCardDetailsHtml = `<br><span style="font-size:11px; padding: 2px 8px; background: #ebd399; color: #7a5012; border-radius:10px; font-weight:700; margin-top: 4px; display: inline-block;">💳 ${cardId}</span>`;
+          }
+
+          const statusColor = statusText === "Attended" ? "#2ecc71" : "#e74c3c";
+          
+          // COMPANION DISPLAY RULE IMPLEMENTED
+          let displayRowContent = "";
+          if (!hasCompanions) {
+            displayRowContent = `<span style="color: ${statusColor}; font-size:16px; font-weight:700;">• ${statusText}</span>`;
+          } else {
+            displayRowContent = `<span style="color: #333;">• ${nameLabel}: </span><span style="color: ${statusColor}; font-weight:700;">${statusText}</span>`;
+          }
+          
+          statusListHtml += `
+            <div style="font-size: 15px; font-weight: 600;">
+              ${displayRowContent}
+              ${extraCardDetailsHtml}
+            </div>`;
+        });
+        statusListHtml += `</div>`;
+
+        wrapper.innerHTML = `
+          <h3>Attendance Already Recorded</h3>
+          <p style="color:#555; line-height:1.6; font-size:14px;">Hi <strong>${cachedGroupRecord.mainGuest}</strong>, we already have a saved response on file for you:</p>
+          ${statusListHtml}
+          <div style="margin-top:25px;">
+            <button class="btn-action" onclick="processProfileFetch('${escapeHtml(mainGuestName)}', true)">YES, UPDATE DETAILS</button>
+            <br>
+            <button class="btn-text-back" onclick="showHomeScreen()">← NO, GO BACK</button>
+          </div>
+        `;
+        return;
+      }
+
+      let successHeaderHtml = showSuccessBanner ? `<div class="success-banner">✨ ATTENDANCE RECORDED! ✨</div>` : "";
+
+      let formHtml = successHeaderHtml + `
+        <div class="meta-box">
+          <div class="meta-item"><span class="meta-label">👤 Main Guest</span><span class="meta-value">${cachedGroupRecord.mainGuest}</span></div>
+          <div class="meta-item"><span class="meta-label">✨ Role</span><span class="meta-value" style="color: #b08400;">${cachedGroupRecord.role !== "-" ? cachedGroupRecord.role : "Guest"}</span></div>
+          <div class="meta-item"><span class="meta-label">💌 RSVP Status</span><span class="meta-value" style="color: #2ecc71;">✓ ${cachedGroupRecord.rsvp}</span></div>
+          <div class="meta-item"><span class="meta-label">📅 Date Responded</span><span class="meta-value" style="font-weight: normal; color: #777; font-size: 13px;">${cachedGroupRecord.timestamp || ''}</span></div>
+          <div class="meta-item"><span class="meta-label">🪑 Allocated Seats</span><span class="meta-value" style="font-weight: 700; color: #c98322;"> ${cachedGroupRecord.seats || '1'}</span></div>
+        </div>
+        <div class="flow-label" style="text-align:left; font-size:13px; font-weight:bold; color:#777; text-transform: uppercase; letter-spacing: 1px;">Review Companions & Status:</div>
+      `;
+
+      const historicalArr = cachedGroupRecord.attendance ? cachedGroupRecord.attendance.split(',').map(s => s.trim()) : [];
+      const historicalCards = cachedGroupRecord.cards ? cachedGroupRecord.cards.split(',').map(s => s.trim()) : [];
+
+      formHtml += generateAttendanceToggleRow(cachedGroupRecord.mainGuest, historicalArr, historicalCards, true, cachedGroupRecord.role);
+
+      let companionArray = [];
+      if (cachedGroupRecord.companions && cachedGroupRecord.companions.trim() !== "-") {
+        companionArray = cachedGroupRecord.companions.split(',').map(name => name.trim());
+      }
+      companionArray.forEach(compName => {
+        if (compName) formHtml += generateAttendanceToggleRow(compName, historicalArr, historicalCards, false, "Guest");
+      });
+
+      formHtml += `
+        <button class="btn-action btn-save-checklist" onclick="commitAttendanceData()">SAVE DETAILS</button>
+        <br>
+        <button class="btn-text-back" onclick="showHomeScreen()">← Back</button>
+      `;
+      wrapper.innerHTML = formHtml;
+    } catch(e) {
+      loader.style.display = 'none';
+      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Error rendering form elements.</p>`;
+    }
+  }
+
+  function generateAttendanceToggleRow(name, historyArray, cardsArray, isPrimary, roleString) {
+    let savedStatus = "";
+    let savedCard = "";
+    
+    if (historyArray && historyArray.length > 0) {
+      const nameMatch = historyArray.find(s => s.startsWith(`${name}:`));
+      if (nameMatch) savedStatus = nameMatch.split(':')[1].trim();
+      else if (historyArray.length === 1 && !historyArray[0].includes(':')) savedStatus = historyArray[0];
+    }
+    
+    if (cardsArray && cardsArray.length > 0) {
+      const cardMatch = cardsArray.find(s => s.startsWith(`${name}:`));
+      if (cardMatch) savedCard = cardMatch.split(':')[1].trim();
+      else if (cardsArray.length === 1 && !cardsArray[0].includes(':')) savedCard = cardsArray[0];
+    }
+
+    const isAttended = savedStatus === "Attended" || savedStatus === ""; 
+    const activeAttendedClass = isAttended ? 'active-attended' : '';
+    const activeAbsentClass = !isAttended ? 'active-absent' : '';
+    const roleSuffix = isPrimary ? ' (Primary Guest)' : '';
+
+    const parsedRole = (roleString || "").toLowerCase();
+    const isSponsor = parsedRole.includes("ninong") || parsedRole.includes("ninang");
+
+    let scratchInputHtml = "";
+    if (!isSponsor) {
+      scratchInputHtml = `
+        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ebd399; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; box-sizing: border-box; background: #fffdf9; margin-top: 8px;">
+      `;
+    }
+
+    return `
+      <div class="guest-row" data-name="${escapeHtml(name)}" data-role="${escapeHtml(roleString || '')}">
+        <span class="guest-name-lbl">• ${name}${roleSuffix}</span>
+        <div class="toggle-container">
+          <div class="toggle-opt ${activeAbsentClass}" onclick="handleToggleChange(this, 'Not Attended')">Not Attended</div>
+          <div class="toggle-opt ${activeAttendedClass}" onclick="handleToggleChange(this, 'Attended')">Attended</div>
+        </div>
+        ${scratchInputHtml}
+      </div>
+    `;
+  }
+
+  function handleToggleChange(element, status) {
+    const parentContainer = element.parentElement;
+    const options = parentContainer.querySelectorAll('.toggle-opt');
+    options.forEach(opt => { opt.className = 'toggle-opt'; });
+    if (status === 'Attended') element.classList.add('active-attended');
+    else element.classList.add('active-absent');
+  }
+
+  async function commitAttendanceData() {
+    const loader = document.getElementById('loader');
+    const structuralRows = document.querySelectorAll('.guest-row');
+    const attendanceSummary = [];
+    const cardsSummary = [];
+    const totalGuests = structuralRows.length;
+
+    structuralRows.forEach(row => {
+      const nameKey = row.getAttribute('data-name');
+      const isAttendedActive = row.querySelector('.active-attended') !== null;
+      const statusText = isAttendedActive ? 'Attended' : 'Not Attended';
+      
+      let finalCardId = "-";
+      const scratchField = row.querySelector('.scratch-input');
+      if (scratchField) {
+        const cardValue = scratchField.value.trim();
+        finalCardId = cardValue !== "" ? cardValue : "-";
+      }
+      
+      if (totalGuests === 1) {
+        attendanceSummary.push(statusText);
+        cardsSummary.push(finalCardId);
+      } else {
+        attendanceSummary.push(`${nameKey}:${statusText}`);
+        cardsSummary.push(`${nameKey}:${finalCardId}`);
+      }
+    });
+
+    if (loader) loader.style.display = 'block';
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ 
+          mainGuest: activeMainGuestGlobal, 
+          combinedAttendanceString: attendanceSummary.join(', '),
+          combinedCardsString: cardsSummary.join(', ')
+        })
+      });
+      
+      const result = await response.json();
+      if (loader) loader.style.display = 'none';
+      
+      if (result.status === "success") {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        processProfileFetch(activeMainGuestGlobal, true, true);
+      } else if (result.status === "duplicate") {
+        alert("⚠️ REGISTRATION DENIED:\n\n" + result.message);
+      } else {
+        alert("The server encountered an issue updating this registry row record.");
+      }
+    } catch (error) {
+      if (loader) loader.style.display = 'none';
+      alert("Network Error: Could not connect to your Google Spreadsheet registry.");
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  }
+</script>
+</body>
+</html>
