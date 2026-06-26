@@ -9,11 +9,10 @@
     * {
       font-family: 'Montserrat', sans-serif !important;
     }
-    body { 
+        body { 
       background-image: url('background-checklist.gif'); 
-      background-size: cover;           
+      background-size: cover;          
       background-position: center center; 
-      background-attachment: fixed;     
       background-repeat: no-repeat;
       background-color: #ffffff; 
       min-height: 100vh; 
@@ -23,6 +22,18 @@
       justify-content: center;
       align-items: flex-start;
       box-sizing: border-box;
+    }
+
+    /* Target mobile screens to prevent layout shifting */
+    @media (max-width: 768px) {
+      body {
+        /* Removes 'fixed' which crashes mobile browsers, letting it scroll naturally */
+        background-attachment: scroll; 
+        /* Ensures the background expands fully even on long companion lists */
+        background-size: 100% 100%; 
+      }
+    }
+
     }
     .container { 
       max-width: 450px; 
