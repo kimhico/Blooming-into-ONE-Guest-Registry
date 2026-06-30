@@ -27,21 +27,36 @@
     }
 
     /* FIX 1: Hard-locked backdrop component completely isolated from JS form adjustments */
-    .app-bg-viewport-lock {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-      
-      /* FIX 2: Explicit current-folder tracking notation to assist hosted deployment trees */
-      background-image: url('./background-checklist.gif'); 
-      background-size: cover;           
-      background-position: center center; 
-      background-repeat: no-repeat;
-      pointer-events: none; /* Allows clicks to pass cleanly straight to the buttons below */
-    }
+/* 1. DEFAULT BACKGROUND (For Laptops and Desktops) */
+.app-bg-viewport-lock {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  
+  /* Your current desktop landscape image */
+  background-image: url('./background-checklist.gif'); 
+  background-size: cover;           
+  background-position: center center; 
+  background-repeat: no-repeat;
+  pointer-events: none; 
+}
+
+/* 2. MOBILE BACKGROUND OVERRIDE (For Phones and Tablets) */
+@media (max-width: 768px) {
+  .app-bg-viewport-lock {
+    /* Automatically switches to your vertical mobile image on smaller screens */
+    background-image: url('./background-checklist-mobile.gif'); 
+    
+    /* Center it so your text and floral designs stay beautifully framed */
+    background-position: center center; 
+    background-size: cover;
+  }
+}
     
     .container { 
       position: relative;
