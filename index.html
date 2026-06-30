@@ -4,36 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blooming into ONE Registry</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght=400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       font-family: 'Montserrat', sans-serif !important;
+    }
+    body { 
+      background-image: url('background-checklist.gif'); 
+      background-size: cover;           
+      background-position: center center; 
+      background-attachment: fixed;     
+      background-repeat: no-repeat;
+      background-color: #ffffff; 
+      min-height: 100vh; 
+      margin: 0; 
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
       box-sizing: border-box;
     }
-    
-    html {
-  /* Remove the background from here entirely */
-  margin: 0;
-  padding: 0;
-  height: 100%; 
-}
-
-body { 
-  margin: 0; 
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  
-  /* FIX: Forces the background to lock ONLY to the size of the laptop screen window */
-  background-image: url('background-checklist.gif'); 
-  background-size: cover;           
-  background-position: center center; 
-  background-repeat: no-repeat;
-  background-attachment: fixed; /* Works perfectly on laptops when attached to body */
-}
-    
     .container { 
       max-width: 450px; 
       width: 100%;
@@ -42,6 +32,7 @@ body {
       padding: 35px 25px; 
       border-radius: 24px; 
       text-align: center;
+      box-sizing: border-box;
     }
     h2, h3 { 
       font-weight: 200;
@@ -63,6 +54,7 @@ body {
       font-size: 15px;
       font-weight: 500;
       text-align: center;
+      box-sizing: border-box;
       margin-bottom: 15px;
       background: #fafafa;
       transition: all 0.3s;
@@ -148,7 +140,7 @@ body {
       font-size: 14px;
     }
     .guest-name-lbl { font-weight: 600; color: #333; }
-    .toggle-container { display: flex; width: 100%; background: rgba(241, 242, 246, 0.8); border-radius: 20px; padding: 3px; }
+    .toggle-container { display: flex; width: 100%; background: rgba(241, 242, 246, 0.8); border-radius: 20px; padding: 3px; box-sizing: border-box; }
     .toggle-opt {
       flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #747d8c; cursor: pointer; border-radius: 18px; transition: all 0.2s;
     }
@@ -235,6 +227,7 @@ body {
         let rawCardsString = cachedGroupRecord.cards || "";
         const cardItems = rawCardsString ? rawCardsString.split(',') : [];
 
+        // STRICT LOGICAL CHECK FOR COMPANIONS
         let hasCompanions = false;
         if (cachedGroupRecord.companions && cachedGroupRecord.companions.trim() !== "" && cachedGroupRecord.companions.trim() !== "-") {
           hasCompanions = true;
@@ -271,6 +264,7 @@ body {
 
           const statusColor = statusText === "Attended" ? "#2ecc71" : "#e74c3c";
           
+          // COMPANION DISPLAY RULE IMPLEMENTED
           let displayRowContent = "";
           if (!hasCompanions) {
             displayRowContent = `<span style="color: ${statusColor}; font-size:16px; font-weight:700;">• ${statusText}</span>`;
@@ -364,7 +358,7 @@ body {
     let scratchInputHtml = "";
     if (!isSponsor) {
       scratchInputHtml = `
-        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ebd399; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; background: #fffdf9; margin-top: 8px;">
+        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ebd399; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; box-sizing: border-box; background: #fffdf9; margin-top: 8px;">
       `;
     }
 
