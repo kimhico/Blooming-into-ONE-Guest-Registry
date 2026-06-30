@@ -10,20 +10,21 @@
       font-family: 'Montserrat', sans-serif !important;
     }
     body { 
-      background-image: url('background-checklist.gif'); 
-      background-size: cover;           
-      background-position: center center; 
-      background-attachment: fixed;     
-      background-repeat: no-repeat;
-      background-color: #ffffff; 
-      min-height: 100vh; 
-      margin: 0; 
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      box-sizing: border-box;
-    }
+  background-image: url('background-checklist.gif'); 
+  background-size: cover;           
+  background-position: center center; 
+  /* 'fixed' breaks on mobile chrome; use scroll or omit to let it render smoothly */
+  background-attachment: scroll;     
+  background-repeat: no-repeat;
+  background-color: #ffffff; 
+  min-height: 100vh; 
+  margin: 0; 
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
     .container { 
       max-width: 450px; 
       width: 100%;
