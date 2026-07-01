@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blooming into ONE Registry</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
- <style>
+  <style>
     * {
       font-family: 'Montserrat', sans-serif !important;
       box-sizing: border-box;
@@ -16,7 +16,7 @@
       padding: 0;
       min-height: 100vh;
       width: 100%;
-      background: transparent !important; /* Forces the canvas image to show through */
+      background: transparent !important;
     }
 
     body { 
@@ -57,50 +57,69 @@
       text-align: center;
     }
 
+    /* Base components shared across desktop view */
+    h2, h3 { font-weight: 600; color: #c842a4; margin-top: 0px; letter-spacing: -0.5px; }
+    .flow-label { font-size: 16px; color: #444; margin-bottom: 15px; font-weight: 500; }
+    .input-field { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 30px; font-size: 15px; font-weight: 500; text-align: center; margin-bottom: 15px; background: #fafafa; transition: all 0.3s; }
+    .input-field:focus { outline: none; border-color: #ebd399; background: #fff; }
+    .btn-action { width: 100%; padding: 15px; color: white; background-color: #608fbe; border: none; border-radius: 30px; cursor: pointer; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .btn-action:hover { background-color: #466789; transform: translateY(-1px); }
+    .btn-selection { width: 100%; padding: 16px; background: #ffffff; color: #333; border: 1px solid #ebd399; border-radius: 30px; font-size: 15px; font-weight: 600; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 6px rgba(176,132,0,0.06); }
+    .btn-selection:hover { background: #fffdf6; border-color: #b08400; color: #b08400; }
+    .btn-save-checklist { background: #b08400; margin-top: 20px; }
+    .btn-save-checklist:hover { background: #967000; }
+    .btn-text-back { background: none; border: none; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; cursor: pointer; display: inline-block; color: #666; }
+    .meta-box { background: transparent; padding: 15px 5px; margin-bottom: 25px; font-size: 14px; text-align: left; line-height: 1.5; display: flex; flex-direction: column; gap: 12px; }
+    .meta-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px dashed rgba(176, 132, 0, 0.25); }
+    .meta-item:last-child { border-bottom: none; }
+    .meta-label { font-weight: 700; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-weight: 600; color: #333; text-align: right; }
+    .guest-row { padding: 12px 18px; border-radius: 14px; margin-bottom: 12px; border: 1px solid rgba(176, 132, 0, 0.3); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 14px; }
+    .guest-name-lbl { font-weight: 600; color: #333; }
+    .toggle-container { display: flex; width: 100%; background: rgba(241, 242, 246, 0.8); border-radius: 20px; padding: 3px; }
+    .toggle-opt { flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #747d8c; cursor: pointer; border-radius: 18px; transition: all 0.2s; }
+    .toggle-opt.active-attended { background: #2ecc71; color: white; }
+    .toggle-opt.active-absent { background: #e74c3c; color: white; }
+    .loader { display: none; color: #ffd275; font-weight: 700; margin: 20px 0; font-size: 14px; }
+    .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
+
     /* ==========================================================
-       RESPONSIVE MOBILE HOOK: LOCKS THE INTERFACE INSIDE THE VIOLET CANVAS
+       RESPONSIVE MOBILE HOOK: LOCKS INTERFACE INSIDE THE VIOLET BOX
        ========================================================== */
     @media (max-width: 768px) {
       body {
-        padding: 0; /* Drops body gaps to let the image flush to the glass */
+        padding: 0;
       }
 
       .app-bg-viewport-lock {
         background-image: url('./We have reserved a seat for you.jpg'); 
         background-position: center top; 
-        background-size: 100% 100%; /* Matches your exact portrait dimensions */
+        background-size: 100% 100%; 
       }
       
       .container {
-        /* Pushes the starting point precisely down below the "ONE" header line */
         margin: 145px auto 0 auto; 
-        
-        /* Restricts the width perfectly so it stays inside the borders */
         width: 82%; 
         max-width: calc(100% - 76px);
-        
-        /* Matches your exact template violet background fill */
         background: #5d346a !important; 
         padding: 20px 15px; 
         border-radius: 4px;
         box-shadow: none;
         
-        /* Locks the box height inside the violet region and enables internal scrolling */
+        /* Locks the scrolling box explicitly into the purple container graphics boundaries */
         height: calc(100vh - 185px);
         max-height: calc(100vh - 185px);
         overflow-y: auto; 
-        -webkit-overflow-scrolling: touch; /* Butter-smooth scrolling on iPhones */
+        -webkit-overflow-scrolling: touch; 
       }
 
-      /* TEXT CONTRAST FOR LIGHT COMPONENT RENDERING ON DARK VIOLET */
+      /* TEXT & INPUT CONTRAST FIXES FOR THE DARK PURPLE BOX */
       .container h2, .container h3 { 
         color: #ffffff !important; 
-        font-weight: 600;
         margin-bottom: 15px;
       }
       .flow-label {
-        color: #ffd275 !important; /* Shifting to theme gold accents for readability */
-        font-weight: 500;
+        color: #ffd275 !important; 
       }
       .guest-name-lbl { 
         color: #ffffff !important; 
@@ -124,38 +143,26 @@
         border: 1px solid rgba(255, 255, 255, 0.15);
       }
       .btn-text-back {
-        color: #bbb;
+        color: #ebd399 !important;
       }
       .btn-text-back:hover {
-        color: #fff;
+        color: #fff !important;
+      }
+      .btn-selection {
+        background: #ffffff;
+        color: #5d346a;
+        border: 2px solid #ffd275;
+      }
+      .btn-selection:hover {
+        background: #ffd275;
+        color: #5d346a;
+      }
+      .input-field {
+        background: #ffffff;
+        color: #333333;
+        border: 2px solid #ffd275;
       }
     }
-
-    /* Base components shared across views */
-    h2, h3 { font-weight: 200; color: #c842a4; margin-top: 0px; letter-spacing: -0.5px; }
-    .flow-label { font-size: 16px; color: #444; margin-bottom: 15px; font-weight: 200; }
-    .input-field { width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 30px; font-size: 15px; font-weight: 500; text-align: center; margin-bottom: 15px; background: #fafafa; transition: all 0.3s; }
-    .input-field:focus { outline: none; border-color: #b08400; background: #fff; }
-    .btn-action { width: 100%; padding: 15px; color: white; background-color: #608fbe; border: none; border-radius: 30px; cursor: pointer; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .btn-action:hover { background-color: #466789; transform: translateY(-1px); }
-    .btn-selection { width: 100%; padding: 16px; background: #ffffff; color: #333; border: 1px solid #ebd399; border-radius: 30px; font-size: 15px; font-weight: 600; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 6px rgba(176,132,0,0.06); }
-    .btn-selection:hover { background: #fffdf6; border-color: #b08400; color: #eacb6c; }
-    .btn-save-checklist { background: #b08400; margin-top: 20px; }
-    .btn-save-checklist:hover { background: #967000; }
-    .btn-text-back { background: none; border: none; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px; cursor: pointer; display: inline-block; }
-    .meta-box { background: transparent; padding: 15px 5px; margin-bottom: 25px; font-size: 14px; text-align: left; line-height: 1.5; display: flex; flex-direction: column; gap: 12px; }
-    .meta-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px dashed rgba(176, 132, 0, 0.25); }
-    .meta-item:last-child { border-bottom: none; }
-    .meta-label { font-weight: 700; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .meta-value { font-weight: 600; color: #333; text-align: right; }
-    .guest-row { padding: 12px 18px; border-radius: 14px; margin-bottom: 12px; border: 1px solid rgba(176, 132, 0, 0.3); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 14px; }
-    .guest-name-lbl { font-weight: 600; }
-    .toggle-container { display: flex; width: 100%; background: rgba(241, 242, 246, 0.8); border-radius: 20px; padding: 3px; }
-    .toggle-opt { flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #747d8c; cursor: pointer; border-radius: 18px; transition: all 0.2s; }
-    .toggle-opt.active-attended { background: #2ecc71; color: white; }
-    .toggle-opt.active-absent { background: #e74c3c; color: white; }
-    .loader { display: none; color: #ffd275; font-weight: 700; margin: 20px 0; font-size: 14px; }
-    .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -200,7 +207,7 @@
       if (dataMatches.length === 0) {
         wrapper.innerHTML = `
           <h3 style="color:#e74c3c;">No Records Found</h3>
-          <p style="color:#666; font-size:14px;">We couldn't locate that name in our attendance registries.</p>
+          <p style="color:#ffffff; font-size:14px; opacity: 0.9;">We couldn't locate that name in our attendance registries.</p>
           <button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>
         `;
         return;
@@ -213,7 +220,7 @@
       wrapper.innerHTML += `<br><button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>`;
     } catch (err) {
       loader.style.display = 'none';
-      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Network Error connecting to script architecture.</p>`;
+      wrapper.innerHTML = `<p style="color:#ff6b6b; font-size:14px; font-weight: bold;">Network Error connecting to script architecture.</p>`;
     }
   }
 
@@ -241,7 +248,7 @@
           hasCompanions = true;
         }
 
-        let statusListHtml = `<div style="text-align: center; margin: 20px auto; max-width: 320px; background: rgba(201,131,34,0.05); padding: 15px 20px; border-radius: 16px; border: 1px dashed rgba(201,131,34,0.25); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;">`;
+        let statusListHtml = `<div style="text-align: center; margin: 20px auto; max-width: 320px; background: rgba(255,255,255,0.08); padding: 15px 20px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;">`;
         
         statusItems.forEach((item, index) => {
           let nameLabel = "";
@@ -267,16 +274,16 @@
 
           let extraCardDetailsHtml = "";
           if (cardId && cardId !== "-") {
-            extraCardDetailsHtml = `<br><span style="font-size:11px; padding: 2px 8px; background: #ebd399; color: #7a5012; border-radius:10px; font-weight:700; margin-top: 4px; display: inline-block;">💳 ${cardId}</span>`;
+            extraCardDetailsHtml = `<br><span style="font-size:11px; padding: 2px 8px; background: #ffd275; color: #5d346a; border-radius:10px; font-weight:700; margin-top: 4px; display: inline-block;">💳 ${cardId}</span>`;
           }
 
-          const statusColor = statusText === "Attended" ? "#2ecc71" : "#e74c3c";
+          const statusColor = statusText === "Attended" ? "#2ecc71" : "#ff4d4d";
           
           let displayRowContent = "";
           if (!hasCompanions) {
             displayRowContent = `<span style="color: ${statusColor}; font-size:16px; font-weight:700;">• ${statusText}</span>`;
           } else {
-            displayRowContent = `<span style="color: #333;">• ${nameLabel}: </span><span style="color: ${statusColor}; font-weight:700;">${statusText}</span>`;
+            displayRowContent = `<span style="color: #ffffff;">• ${nameLabel}: </span><span style="color: ${statusColor}; font-weight:700;">${statusText}</span>`;
           }
           
           statusListHtml += `
@@ -288,8 +295,8 @@
         statusListHtml += `</div>`;
 
         wrapper.innerHTML = `
-          <h3>Attendance Already Recorded</h3>
-          <p style="color:#555; line-height:1.6; font-size:14px;">Hi <strong>${cachedGroupRecord.mainGuest}</strong>, we already have a saved response on file for you:</p>
+          <h3>Attendance Recorded</h3>
+          <p style="color:#ffffff; line-height:1.6; font-size:14px;">Hi <strong>${cachedGroupRecord.mainGuest}</strong>, we already have a saved response on file for you:</p>
           ${statusListHtml}
           <div style="margin-top:25px;">
             <button class="btn-action" onclick="processProfileFetch('${escapeHtml(mainGuestName)}', true)">YES, UPDATE DETAILS</button>
@@ -305,12 +312,12 @@
       let formHtml = successHeaderHtml + `
         <div class="meta-box">
           <div class="meta-item"><span class="meta-label">👤 Main Guest</span><span class="meta-value">${cachedGroupRecord.mainGuest}</span></div>
-          <div class="meta-item"><span class="meta-label">✨ Role</span><span class="meta-value" style="color: #b08400;">${cachedGroupRecord.role !== "-" ? cachedGroupRecord.role : "Guest"}</span></div>
+          <div class="meta-item"><span class="meta-label">✨ Role</span><span class="meta-value" style="color: #ffd275;">${cachedGroupRecord.role !== "-" ? cachedGroupRecord.role : "Guest"}</span></div>
           <div class="meta-item"><span class="meta-label">💌 RSVP Status</span><span class="meta-value" style="color: #2ecc71;">✓ ${cachedGroupRecord.rsvp}</span></div>
-          <div class="meta-item"><span class="meta-label">📅 Date Responded</span><span class="meta-value" style="font-weight: normal; color: #777; font-size: 13px;">${cachedGroupRecord.timestamp || ''}</span></div>
-          <div class="meta-item"><span class="meta-label">🪑 Allocated Seats</span><span class="meta-value" style="font-weight: 700; color: #c98322;"> ${cachedGroupRecord.seats || '1'}</span></div>
+          <div class="meta-item"><span class="meta-label">📅 Date Responded</span><span class="meta-value" style="font-weight: normal; color: #ffffff; opacity:0.7; font-size: 13px;">${cachedGroupRecord.timestamp || ''}</span></div>
+          <div class="meta-item"><span class="meta-label">🪑 Allocated Seats</span><span class="meta-value" style="font-weight: 700; color: #ffd275;"> ${cachedGroupRecord.seats || '1'}</span></div>
         </div>
-        <div class="flow-label" style="text-align:left; font-size:13px; font-weight:bold; color:#777; text-transform: uppercase; letter-spacing: 1px;">Review Companions & Status:</div>
+        <div class="flow-label" style="text-align:left; font-size:13px; font-weight:bold; text-transform: uppercase; letter-spacing: 1px;">Review Companions & Status:</div>
       `;
 
       const historicalArr = cachedGroupRecord.attendance ? cachedGroupRecord.attendance.split(',').map(s => s.trim()) : [];
@@ -334,7 +341,7 @@
       wrapper.innerHTML = formHtml;
     } catch(e) {
       loader.style.display = 'none';
-      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Error rendering form elements.</p>`;
+      wrapper.innerHTML = `<p style="color:#ff6b6b; font-size:14px; font-weight:bold;">Error rendering form elements.</p>`;
     }
   }
 
@@ -357,7 +364,7 @@
     const isAttended = savedStatus === "Attended" || savedStatus === ""; 
     const activeAttendedClass = isAttended ? 'active-attended' : '';
     const activeAbsentClass = !isAttended ? 'active-absent' : '';
-    const roleSuffix = isPrimary ? ' (Primary Guest)' : '';
+    const roleSuffix = isPrimary ? ' (Primary)' : '';
 
     const parsedRole = (roleString || "").toLowerCase();
     const isSponsor = parsedRole.includes("ninong") || parsedRole.includes("ninang");
@@ -365,7 +372,7 @@
     let scratchInputHtml = "";
     if (!isSponsor) {
       scratchInputHtml = `
-        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ebd399; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; background: #fffdf9; margin-top: 8px;">
+        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ffd275; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; background: #ffffff; margin-top: 8px; color:#333;">
       `;
     }
 
