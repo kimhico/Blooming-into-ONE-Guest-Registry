@@ -84,7 +84,7 @@
     .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
 
     /* ==========================================================
-       RESPONSIVE MOBILE HOOK: CONTROLS THE COMPARTMENT UNDER THE BANNER
+       RESPONSIVE MOBILE HOOK: MOVES BOX SAFELY BELOW LOGO GRAPHIC
        ========================================================== */
     @media (max-width: 768px) {
       body {
@@ -93,24 +93,22 @@
 
       .app-bg-viewport-lock {
         background-image: url('./background-checklist-mobile.gif'); 
-        background-position: center center; 
-        background-size: cover; 
+        background-position: center top; 
+        background-size: 100% 100%; 
       }
       
       .container {
-        /* Clear margin pushes the form start precisely below the layout's title banner */
-        margin: 140px auto 0 auto; 
+        /* Pushes program box down cleanly below the "Anaiah's First Birthday" text */
+        margin: 190px auto 0 auto; 
         width: 86%; 
         max-width: 400px;
-        
-        /* Clear background so the underlying image asset is visible */
         background: transparent !important; 
         padding: 10px 15px; 
         box-shadow: none;
         
-        /* Locks the scroll footprint below the banner to stop overlap glitches */
-        height: calc(100vh - 160px);
-        max-height: calc(100vh - 160px);
+        /* Caps heights and hides scrolled-up variables safely below the banner line */
+        height: calc(100vh - 210px);
+        max-height: calc(100vh - 210px);
         overflow-y: auto; 
         -webkit-overflow-scrolling: touch; 
       }
@@ -127,7 +125,7 @@
         color: #333333 !important; 
       }
       .meta-box {
-        background: rgba(255, 255, 255, 0.4); /* Subtle transparent frosting for readability */
+        background: rgba(255, 255, 255, 0.4); 
         padding: 15px 12px;
         border-radius: 16px;
       }
@@ -408,4 +406,58 @@
     structuralRows.forEach(row => {
       const nameKey = row.getAttribute('data-name');
       const isAttendedActive = row.querySelector('.active-attended') !== null;
-      const statusText
+      const statusText = isAttendedActive ? 'Attended' : 'Not Attended';
+      
+      let finalCardId = "-";
+      const scratchField = row.querySelector('.scratch-input');
+      if (scratchField) {
+        const cardValue = scratchField.value.trim();
+        finalCardId = cardValue !== "" ? cardValue : "-";
+      }
+      
+      if (totalGuests === 1) {
+        attendanceSummary.push(statusText);
+        cardsSummary.push(finalCardId);
+      } else {
+        attendanceSummary.push(`${nameKey}:${statusText}`);
+        cardsSummary.push(`${nameKey}:${finalCardId}`);
+      }
+    });
+
+    if (loader) loader.style.display = 'block';
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ 
+          mainGuest: activeMainGuestGlobal, 
+          combinedAttendanceString: attendanceSummary.join(', '),
+          combinedCardsString: cardsSummary.join(', ')
+        })
+      });
+      
+      const result = await response.json();
+      if (loader) loader.style.display = 'none';
+      
+      if (result.status === "success") {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        processProfileFetch(activeMainGuestGlobal, true, true);
+      } else if (result.status === "duplicate") {
+        alert("⚠️ REGISTRATION DENIED:\n\n" + result.message);
+      } else {
+        alert("The server encountered an issue updating this registry row record.");
+      }
+    } catch (error) {
+      if (loader) loader.style.display = 'none';
+      alert("Network Error: Could not connect to your Google Spreadsheet registry.");
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  }
+</script>
+</body>
+</html>
