@@ -44,7 +44,7 @@
       pointer-events: none; 
     }
     
-    /* THE DYNAMIC INTERFACE CONTAINER */
+    /* THE DYNAMIC INTERFACE CONTAINER (Desktop Layout) */
     .container { 
       position: relative;
       z-index: 2;
@@ -80,11 +80,11 @@
     .toggle-opt { flex: 1; text-align: center; padding: 8px 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #747d8c; cursor: pointer; border-radius: 18px; transition: all 0.2s; }
     .toggle-opt.active-attended { background: #2ecc71; color: white; }
     .toggle-opt.active-absent { background: #e74c3c; color: white; }
-    .loader { display: none; color: #ffd275; font-weight: 700; margin: 20px 0; font-size: 14px; }
+    .loader { display: none; color: #b08400; font-weight: 700; margin: 20px 0; font-size: 14px; }
     .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
 
     /* ==========================================================
-       RESPONSIVE MOBILE HOOK: USES SEPARATE MOBILE BACKGROUND IMAGE
+       RESPONSIVE MOBILE HOOK: CONTROLS THE COMPARTMENT UNDER THE BANNER
        ========================================================== */
     @media (max-width: 768px) {
       body {
@@ -92,30 +92,30 @@
       }
 
       .app-bg-viewport-lock {
-        /* FIX: Change this file path if your mobile image filename is different! */
-        background-image: url('./background-checklist-mobile.jpg'); 
+        background-image: url('./background-checklist-mobile.gif'); 
         background-position: center center; 
         background-size: cover; 
       }
       
       .container {
-        /* Standardizing margins so it sits nicely in the viewport center on mobile */
-        margin: 80px auto 40px auto; 
-        width: 90%; 
+        /* Clear margin pushes the form start precisely below the layout's title banner */
+        margin: 140px auto 0 auto; 
+        width: 86%; 
         max-width: 400px;
         
-        /* FIX: Removed solid violet fill. Container is now transparent to show image underneath */
+        /* Clear background so the underlying image asset is visible */
         background: transparent !important; 
-        padding: 20px; 
+        padding: 10px 15px; 
         box-shadow: none;
         
-        /* Removing forced height rules to let the page scroll organically over the background */
-        height: auto;
-        max-height: none;
-        overflow-y: visible; 
+        /* Locks the scroll footprint below the banner to stop overlap glitches */
+        height: calc(100vh - 160px);
+        max-height: calc(100vh - 160px);
+        overflow-y: auto; 
+        -webkit-overflow-scrolling: touch; 
       }
 
-      /* REVERTED TEXT CONTRAST BACK TO DARK STYLES SO IT POPS ON LIGHT GRAPHICS */
+      /* TEXT & COMPONENT RENDERING FOR TRANSPARENT BACKGROUNDS */
       .container h2, .container h3 { 
         color: #c842a4 !important; 
         margin-bottom: 15px;
@@ -127,21 +127,22 @@
         color: #333333 !important; 
       }
       .meta-box {
-        background: transparent;
-        padding: 15px 5px;
+        background: rgba(255, 255, 255, 0.4); /* Subtle transparent frosting for readability */
+        padding: 15px 12px;
+        border-radius: 16px;
       }
       .meta-item { 
-        border-bottom: 1px dashed rgba(176, 132, 0, 0.25) !important; 
+        border-bottom: 1px dashed rgba(176, 132, 0, 0.2) !important; 
       }
       .meta-label { 
-        color: #666666 !important; 
+        color: #555555 !important; 
       }
       .meta-value { 
-        color: #333333 !important; 
+        color: #222222 !important; 
       }
       .guest-row {
         background: #ffffff;
-        border: 1px solid rgba(176, 132, 0, 0.3);
+        border: 1px solid rgba(176, 132, 0, 0.25);
       }
       .btn-text-back {
         color: #666666 !important;
@@ -159,7 +160,7 @@
         color: #b08400;
       }
       .input-field {
-        background: #fafafa;
+        background: #ffffff;
         color: #333333;
         border: 1px solid #e0e0e0;
       }
@@ -407,58 +408,4 @@
     structuralRows.forEach(row => {
       const nameKey = row.getAttribute('data-name');
       const isAttendedActive = row.querySelector('.active-attended') !== null;
-      const statusText = isAttendedActive ? 'Attended' : 'Not Attended';
-      
-      let finalCardId = "-";
-      const scratchField = row.querySelector('.scratch-input');
-      if (scratchField) {
-        const cardValue = scratchField.value.trim();
-        finalCardId = cardValue !== "" ? cardValue : "-";
-      }
-      
-      if (totalGuests === 1) {
-        attendanceSummary.push(statusText);
-        cardsSummary.push(finalCardId);
-      } else {
-        attendanceSummary.push(`${nameKey}:${statusText}`);
-        cardsSummary.push(`${nameKey}:${finalCardId}`);
-      }
-    });
-
-    if (loader) loader.style.display = 'block';
-
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ 
-          mainGuest: activeMainGuestGlobal, 
-          combinedAttendanceString: attendanceSummary.join(', '),
-          combinedCardsString: cardsSummary.join(', ')
-        })
-      });
-      
-      const result = await response.json();
-      if (loader) loader.style.display = 'none';
-      
-      if (result.status === "success") {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        processProfileFetch(activeMainGuestGlobal, true, true);
-      } else if (result.status === "duplicate") {
-        alert("⚠️ REGISTRATION DENIED:\n\n" + result.message);
-      } else {
-        alert("The server encountered an issue updating this registry row record.");
-      }
-    } catch (error) {
-      if (loader) loader.style.display = 'none';
-      alert("Network Error: Could not connect to your Google Spreadsheet registry.");
-    }
-  }
-
-  function escapeHtml(str) {
-    if (!str) return "";
-    return str.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-  }
-</script>
-</body>
-</html>
+      const statusText
