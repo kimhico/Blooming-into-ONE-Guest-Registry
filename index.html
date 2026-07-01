@@ -84,7 +84,7 @@
     .success-banner { background-color: #d4edda; color: #155724; padding: 14px; border-radius: 30px; margin-bottom: 20px; font-size: 14px; font-weight: 700; }
 
     /* ==========================================================
-       RESPONSIVE MOBILE HOOK: LOCKS INTERFACE INSIDE THE VIOLET BOX
+       RESPONSIVE MOBILE HOOK: USES SEPARATE MOBILE BACKGROUND IMAGE
        ========================================================== */
     @media (max-width: 768px) {
       body {
@@ -92,75 +92,76 @@
       }
 
       .app-bg-viewport-lock {
-        background-image: url('./background-checklist-mobile.gif'); 
-        background-position: center top; 
-        background-size: 100% 100%; 
+        /* FIX: Change this file path if your mobile image filename is different! */
+        background-image: url('./background-checklist-mobile.jpg'); 
+        background-position: center center; 
+        background-size: cover; 
       }
       
       .container {
-        margin: 145px auto 0 auto; 
-        width: 82%; 
-        max-width: calc(100% - 76px);
-        background: #5d346a !important; 
-        padding: 20px 15px; 
-        border-radius: 4px;
+        /* Standardizing margins so it sits nicely in the viewport center on mobile */
+        margin: 80px auto 40px auto; 
+        width: 90%; 
+        max-width: 400px;
+        
+        /* FIX: Removed solid violet fill. Container is now transparent to show image underneath */
+        background: transparent !important; 
+        padding: 20px; 
         box-shadow: none;
         
-        /* Locks the scrolling box explicitly into the purple container graphics boundaries */
-        height: calc(100vh - 185px);
-        max-height: calc(100vh - 185px);
-        overflow-y: auto; 
-        -webkit-overflow-scrolling: touch; 
+        /* Removing forced height rules to let the page scroll organically over the background */
+        height: auto;
+        max-height: none;
+        overflow-y: visible; 
       }
 
-      /* TEXT & INPUT CONTRAST FIXES FOR THE DARK PURPLE BOX */
+      /* REVERTED TEXT CONTRAST BACK TO DARK STYLES SO IT POPS ON LIGHT GRAPHICS */
       .container h2, .container h3 { 
-        color: #ffffff !important; 
+        color: #c842a4 !important; 
         margin-bottom: 15px;
       }
       .flow-label {
-        color: #ffd275 !important; 
+        color: #444444 !important; 
       }
       .guest-name-lbl { 
-        color: #ffffff !important; 
+        color: #333333 !important; 
       }
       .meta-box {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 12px 10px;
-        border-radius: 12px;
+        background: transparent;
+        padding: 15px 5px;
       }
       .meta-item { 
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.15) !important; 
+        border-bottom: 1px dashed rgba(176, 132, 0, 0.25) !important; 
       }
       .meta-label { 
-        color: #ffd275 !important; 
+        color: #666666 !important; 
       }
       .meta-value { 
-        color: #ffffff !important; 
+        color: #333333 !important; 
       }
       .guest-row {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: #ffffff;
+        border: 1px solid rgba(176, 132, 0, 0.3);
       }
       .btn-text-back {
-        color: #ebd399 !important;
+        color: #666666 !important;
       }
       .btn-text-back:hover {
-        color: #fff !important;
+        color: #000000 !important;
       }
       .btn-selection {
         background: #ffffff;
-        color: #5d346a;
-        border: 2px solid #ffd275;
+        color: #333333;
+        border: 1px solid #ebd399;
       }
       .btn-selection:hover {
-        background: #ffd275;
-        color: #5d346a;
+        background: #fffdf6;
+        color: #b08400;
       }
       .input-field {
-        background: #ffffff;
+        background: #fafafa;
         color: #333333;
-        border: 2px solid #ffd275;
+        border: 1px solid #e0e0e0;
       }
     }
   </style>
@@ -207,7 +208,7 @@
       if (dataMatches.length === 0) {
         wrapper.innerHTML = `
           <h3 style="color:#e74c3c;">No Records Found</h3>
-          <p style="color:#ffffff; font-size:14px; opacity: 0.9;">We couldn't locate that name in our attendance registries.</p>
+          <p style="color:#666; font-size:14px;">We couldn't locate that name in our attendance registries.</p>
           <button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>
         `;
         return;
@@ -220,7 +221,7 @@
       wrapper.innerHTML += `<br><button class="btn-text-back" onclick="showHomeScreen()">← Back to Search</button>`;
     } catch (err) {
       loader.style.display = 'none';
-      wrapper.innerHTML = `<p style="color:#ff6b6b; font-size:14px; font-weight: bold;">Network Error connecting to script architecture.</p>`;
+      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Network Error connecting to script architecture.</p>`;
     }
   }
 
@@ -248,7 +249,7 @@
           hasCompanions = true;
         }
 
-        let statusListHtml = `<div style="text-align: center; margin: 20px auto; max-width: 320px; background: rgba(255,255,255,0.08); padding: 15px 20px; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;">`;
+        let statusListHtml = `<div style="text-align: center; margin: 20px auto; max-width: 320px; background: rgba(201,131,34,0.05); padding: 15px 20px; border-radius: 16px; border: 1px dashed rgba(201,131,34,0.25); display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center;">`;
         
         statusItems.forEach((item, index) => {
           let nameLabel = "";
@@ -274,16 +275,16 @@
 
           let extraCardDetailsHtml = "";
           if (cardId && cardId !== "-") {
-            extraCardDetailsHtml = `<br><span style="font-size:11px; padding: 2px 8px; background: #ffd275; color: #5d346a; border-radius:10px; font-weight:700; margin-top: 4px; display: inline-block;">💳 ${cardId}</span>`;
+            extraCardDetailsHtml = `<br><span style="font-size:11px; padding: 2px 8px; background: #ebd399; color: #7a5012; border-radius:10px; font-weight:700; margin-top: 4px; display: inline-block;">💳 ${cardId}</span>`;
           }
 
-          const statusColor = statusText === "Attended" ? "#2ecc71" : "#ff4d4d";
+          const statusColor = statusText === "Attended" ? "#2ecc71" : "#e74c3c";
           
           let displayRowContent = "";
           if (!hasCompanions) {
             displayRowContent = `<span style="color: ${statusColor}; font-size:16px; font-weight:700;">• ${statusText}</span>`;
           } else {
-            displayRowContent = `<span style="color: #ffffff;">• ${nameLabel}: </span><span style="color: ${statusColor}; font-weight:700;">${statusText}</span>`;
+            displayRowContent = `<span style="color: #333;">• ${nameLabel}: </span><span style="color: ${statusColor}; font-weight:700;">${statusText}</span>`;
           }
           
           statusListHtml += `
@@ -295,8 +296,8 @@
         statusListHtml += `</div>`;
 
         wrapper.innerHTML = `
-          <h3>Attendance Recorded</h3>
-          <p style="color:#ffffff; line-height:1.6; font-size:14px;">Hi <strong>${cachedGroupRecord.mainGuest}</strong>, we already have a saved response on file for you:</p>
+          <h3>Attendance Already Recorded</h3>
+          <p style="color:#555; line-height:1.6; font-size:14px;">Hi <strong>${cachedGroupRecord.mainGuest}</strong>, we already have a saved response on file for you:</p>
           ${statusListHtml}
           <div style="margin-top:25px;">
             <button class="btn-action" onclick="processProfileFetch('${escapeHtml(mainGuestName)}', true)">YES, UPDATE DETAILS</button>
@@ -312,12 +313,12 @@
       let formHtml = successHeaderHtml + `
         <div class="meta-box">
           <div class="meta-item"><span class="meta-label">👤 Main Guest</span><span class="meta-value">${cachedGroupRecord.mainGuest}</span></div>
-          <div class="meta-item"><span class="meta-label">✨ Role</span><span class="meta-value" style="color: #ffd275;">${cachedGroupRecord.role !== "-" ? cachedGroupRecord.role : "Guest"}</span></div>
+          <div class="meta-item"><span class="meta-label">✨ Role</span><span class="meta-value" style="color: #b08400;">${cachedGroupRecord.role !== "-" ? cachedGroupRecord.role : "Guest"}</span></div>
           <div class="meta-item"><span class="meta-label">💌 RSVP Status</span><span class="meta-value" style="color: #2ecc71;">✓ ${cachedGroupRecord.rsvp}</span></div>
-          <div class="meta-item"><span class="meta-label">📅 Date Responded</span><span class="meta-value" style="font-weight: normal; color: #ffffff; opacity:0.7; font-size: 13px;">${cachedGroupRecord.timestamp || ''}</span></div>
-          <div class="meta-item"><span class="meta-label">🪑 Allocated Seats</span><span class="meta-value" style="font-weight: 700; color: #ffd275;"> ${cachedGroupRecord.seats || '1'}</span></div>
+          <div class="meta-item"><span class="meta-label">📅 Date Responded</span><span class="meta-value" style="font-weight: normal; color: #777; font-size: 13px;">${cachedGroupRecord.timestamp || ''}</span></div>
+          <div class="meta-item"><span class="meta-label">🪑 Allocated Seats</span><span class="meta-value" style="font-weight: 700; color: #c98322;"> ${cachedGroupRecord.seats || '1'}</span></div>
         </div>
-        <div class="flow-label" style="text-align:left; font-size:13px; font-weight:bold; text-transform: uppercase; letter-spacing: 1px;">Review Companions & Status:</div>
+        <div class="flow-label" style="text-align:left; font-size:13px; font-weight:bold; color:#777; text-transform: uppercase; letter-spacing: 1px;">Review Companions & Status:</div>
       `;
 
       const historicalArr = cachedGroupRecord.attendance ? cachedGroupRecord.attendance.split(',').map(s => s.trim()) : [];
@@ -341,7 +342,7 @@
       wrapper.innerHTML = formHtml;
     } catch(e) {
       loader.style.display = 'none';
-      wrapper.innerHTML = `<p style="color:#ff6b6b; font-size:14px; font-weight:bold;">Error rendering form elements.</p>`;
+      wrapper.innerHTML = `<p style="color:red; font-size:14px;">Error rendering form elements.</p>`;
     }
   }
 
@@ -364,7 +365,7 @@
     const isAttended = savedStatus === "Attended" || savedStatus === ""; 
     const activeAttendedClass = isAttended ? 'active-attended' : '';
     const activeAbsentClass = !isAttended ? 'active-absent' : '';
-    const roleSuffix = isPrimary ? ' (Primary)' : '';
+    const roleSuffix = isPrimary ? ' (Primary Guest)' : '';
 
     const parsedRole = (roleString || "").toLowerCase();
     const isSponsor = parsedRole.includes("ninong") || parsedRole.includes("ninang");
@@ -372,7 +373,7 @@
     let scratchInputHtml = "";
     if (!isSponsor) {
       scratchInputHtml = `
-        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ffd275; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; background: #ffffff; margin-top: 8px; color:#333;">
+        <input type="text" class="scratch-input" placeholder="Scratch Card # or 'Kid'" value="${escapeHtml(savedCard && savedCard !== '-' ? savedCard : '')}" style="width: 100%; padding: 8px 12px; border: 1px solid #ebd399; border-radius: 20px; font-size: 13px; font-weight: 600; text-align: center; background: #fffdf9; margin-top: 8px;">
       `;
     }
 
